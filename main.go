@@ -3,68 +3,39 @@ package main
 import (
 	"fmt"
 	"github.com/buger/jsonparser"
-	"github.com/gocolly/colly"
 	"io/ioutil"
 	"net/http"
-	"strconv"
-	"strings"
 )
 
+type Categories struct {
+	Categories []Category
+}
+
+type Category struct {
+	Name    string
+	PageUrl string
+}
 
 func main() {
 	//scrapId("https://www.wildberries.ru/catalog/zhenshchinam/bolshie-razmery/bele")
-	scrapCategories()
+	//scrapCategories()
+	//scrapItem("7851246")
+	//scrapId("https://www.wildberries.ru/catalog/budushchie-mamy/aksessuary")
+	//fmt.Println(scrapImages("9510116"))
 }
 
-
-func scrapCategoriesCycle(c []byte) {
-	jsonparser.ArrayEach(c, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
-
-		cNew, _, _, childError := jsonparser.Get(value, "childs")
-		if childError != nil {
-			name, _, _, _ := jsonparser.Get(value, "name")
-			pageUrl, _, _, _ := jsonparser.Get(value, "pageUrl")
-			if strings.Contains(string(pageUrl), "catalog") {
-				fmt.Println("Ребенка нет:", string(name), string(pageUrl))
-			}
-		} else {
-			scrapCategoriesCycle(cNew)
-		}
-})
-}
-
-func scrapCategories() {
-	url := "https://www.wildberries.ru/gettopmenuinner?lang=ru"
+func scrapItem(id string) {
+	url := "https://wbxcatalog-ru.wildberries.ru/nm-2-card/catalog?locale=ru&nm=" + id
 	res, _ := http.Get(url)
 	body, _ := ioutil.ReadAll(res.Body)
-	c, _, _, _ := jsonparser.Get(body, "value", "menu")
-	scrapCategoriesCycle(c)
-
-}
-
-
-func scrapId(url string) {
-	c := colly.NewCollector()
-	newElementsCount := 0
-	c.OnHTML(".product-card__wrapper a", func(e *colly.HTMLElement) {
-		link := e.Attr("href")
-		id := strings.Split(link, "/")[2]
-		if id != "basket" {
-			println(id)
-			newElementsCount++
-		}
+	c, _, _, _ := jsonparser.Get(body, "data", "products")
+	_, err := jsonparser.ArrayEach(c, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+		id, _, _, _ := jsonparser.Get(value, "id")
+		price, _, _, _ := jsonparser.Get(value, "priceU")
+		salePrice, _, _, _ := jsonparser.Get(value, "salePriceU")
+		fmt.Println(string(id), string(price), string(salePrice))
 	})
-
-	addrId := 0
-	for {
-		addrId++
-		linkPage := url + "?sort=popular&page=" + strconv.Itoa(addrId)
-		c.Visit(linkPage)
-		println(addrId, newElementsCount)
-		if newElementsCount == 0 {
-			break
-		}
-		newElementsCount = 0
+	if err != nil {
+		return
 	}
-
 }
