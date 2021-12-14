@@ -23,7 +23,7 @@ func scrapImages(id string) []string {
 	}
 }
 
-func scrapId(url string) {
+func scrapId(url string, category string) {
 	c := colly.NewCollector()
 	newElementsCount := 0
 	c.OnHTML(".product-card__wrapper a", func(e *colly.HTMLElement) {
@@ -31,7 +31,8 @@ func scrapId(url string) {
 		id := strings.Split(link, "/")[2]
 		if id != "basket" {
 			imagesLinks := scrapImages(id)
-			fmt.Println(id, imagesLinks)
+			idInt, _ := strconv.Atoi(id)
+			writeIdToPostgreSql(idInt, imagesLinks, category)
 			newElementsCount++
 		}
 	})
@@ -56,6 +57,6 @@ func scrapId(url string) {
 func scrapIds() {
 	categories := readJson()
 	for _, v := range categories.Categories {
-		scrapId(v.PageUrl)
+		scrapId(v.PageUrl, v.Name)
 	}
 }
