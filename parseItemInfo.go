@@ -1,18 +1,28 @@
 package main
 
 import (
+	"fmt"
 	"github.com/buger/jsonparser"
 	"io/ioutil"
 	"net/http"
 	"strconv"
+	"time"
 )
 
-func scrapItem(id string, category string) {
+func scrapItem(id string, category string) int {
 	url := "https://wbxcatalog-ru.wildberries.ru/nm-2-card/catalog?locale=ru&nm=" + id
-	res, _ := http.Get(url)
-	body, _ := ioutil.ReadAll(res.Body)
+	res, err := http.Get(url)
+	if err != nil {
+		time.Sleep(time.Second * 3)
+		return scrapItem(id, category)
+	}
+	body, e := ioutil.ReadAll(res.Body)
+	if e != nil {
+		time.Sleep(time.Second * 3)
+		return scrapItem(id, category)
+	}
 	c, _, _, _ := jsonparser.Get(body, "data", "products")
-	_, err := jsonparser.ArrayEach(c, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+	_, err = jsonparser.ArrayEach(c, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
 		price, _, _, error1 := jsonparser.Get(value, "priceU")
 		salePrice, _, _, error2 := jsonparser.Get(value, "salePriceU")
 
@@ -72,17 +82,23 @@ func scrapItem(id string, category string) {
 			salePriceF, _ = strconv.ParseFloat(salePriceS, 8)
 		}
 		idInt, _ := strconv.Atoi(id)
-
-		updateItemInfoPostgreSql(idInt, float32(priceF), float32(salePriceF), colors, sizes, count, category)
+		fmt.Println(idInt, priceF, salePriceF, colors, sizes, count, category)
+		go updateItemInfoPostgreSql(idInt, float32(priceF), float32(salePriceF), colors, sizes, count, category)
 	})
 	if err != nil {
-		return
+		time.Sleep(time.Second * 3)
+		return scrapItem(id, category)
 	}
+	return 1
 }
 
 func scrapItems() {
 	for _, v := range getDbIds() {
-		scrapItem(strconv.Itoa(v.id), v.category)
+
+		go scrapItem(strconv.Itoa(v.id), v.category)
 		// time.Sleep(time.Second)
+
 	}
+	var input string
+	fmt.Scanln(&input)
 }

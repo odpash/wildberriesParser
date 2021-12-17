@@ -14,23 +14,26 @@ func scrapCategoriesCycle(c []byte, newCategories Categories) Categories {
 			name, _, _, _ := jsonparser.Get(value, "name")
 			pageUrl, _, _, _ := jsonparser.Get(value, "pageUrl")
 			if strings.Contains(string(pageUrl), "catalog") {
-				newCategory := Category{
-					Name:    string(name),
-					PageUrl: "https://www.wildberries.ru" + string(pageUrl),
-				}
-				isIn := false
-				for _, v := range newCategories.Categories {
-					if v.Name == newCategory.Name {
-						isIn = true
+				if !strings.Contains(string(pageUrl), "https://digital") {
+					newCategory := Category{
+						Name:    string(name),
+						PageUrl: "https://www.wildberries.ru" + string(pageUrl),
 					}
-				}
-				if !isIn {
-					newCategories.Categories = append(newCategories.Categories, newCategory)
+					isIn := false
+					for _, v := range newCategories.Categories {
+						if v.Name == newCategory.Name {
+							isIn = true
+						}
+					}
+					if !isIn {
+						newCategories.Categories = append(newCategories.Categories, newCategory)
+					}
 				}
 			}
 		} else {
 			newCategories = scrapCategoriesCycle(cNew, newCategories)
 		}
+
 	})
 
 	if err != nil {
