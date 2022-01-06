@@ -42,7 +42,7 @@ func scrapId(url string, category string, pageNum int, readOnly bool) int {
 		err := c.Visit(linkPage)
 		if err != nil {
 			divizion := rand.Intn(1000)
-			fmt.Println("Request error. Sleep ", divizion, " microsecs and continue")
+			fmt.Println("Request error. Sleep ", divizion, " millisecs and continue")
 			time.Sleep(time.Millisecond * time.Duration(divizion))
 			scrapId(url, category, pageNum, false)
 		}
@@ -81,6 +81,9 @@ func scrapIds() {
 	nowCount := 0
 	for x, v := range categories.Categories {
 		start := time.Now()
+		if x >= len(sp) {
+			continue
+		}
 		pagesCount := sp[x].pagesCount
 		for i := 1; i <= pagesCount; i++ {
 			wg.Add(1)
