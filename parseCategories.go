@@ -69,7 +69,7 @@ func scrapCategories() {
 
 func main() {
 	for {
-		scrapCategories()
+		scrapCategories() // How to run? | go run parseCategories.go Interfaces.go db.go
 		time.Sleep(time.Hour)
 	}
 }

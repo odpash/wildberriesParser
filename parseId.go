@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"github.com/getsentry/sentry-go"
 	"github.com/gocolly/colly"
+	"log"
 	"math/rand"
 	"strconv"
 	"strings"
@@ -57,6 +59,14 @@ type arr struct {
 }
 
 func scrapIds() {
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn: "https://f20597c3014e4699969af0244a66a6f8@o1108001.ingest.sentry.io/6135375",
+	})
+	if err != nil {
+		log.Fatalf("sentry.Init: %s", err)
+	}
+	defer sentry.Flush(2 * time.Second)
+	sentry.CaptureMessage("[2/4] Скрипт парсера ID запущен!")
 	var wg sync.WaitGroup
 	categories := readJson()
 	summaryCount := 0
@@ -66,11 +76,9 @@ func scrapIds() {
 		pagesCount := scrapId(v.PageUrl, v.Name, 1, true)
 		summaryCount += pagesCount
 		sp = append(sp, arr{pagesCount: pagesCount})
-		if summaryCount > 10000 {
-			break
-		}
 	}
-	fmt.Println("Все категории были получены за:", time.Since(start_first), "Количество:", summaryCount)
+	sentry.CaptureMessage("[2/4] Все страницы были получены за: " + time.Since(start_first).String() + " Количество:" + strconv.Itoa(summaryCount))
+	nowCount := 0
 	for x, v := range categories.Categories {
 		start := time.Now()
 		pagesCount := sp[x].pagesCount
@@ -82,12 +90,22 @@ func scrapIds() {
 			}(v, i, false)
 			if i%50 == 0 {
 				wg.Wait()
-				fmt.Println(i, "/", pagesCount)
 			}
 		}
 		if pagesCount != 0 {
 			wg.Wait()
 		}
-		fmt.Println("Выполнено за:", time.Since(start), "Количество:", pagesCount, "Со старта прошло:", time.Since(start_first))
+		nowCount += pagesCount
+		sentry.CaptureMessage("[2/4] Обработка группы " + strconv.Itoa(x+1) + "/" + strconv.Itoa(len(sp)) +
+			" завершена за " + time.Since(start).String() + "!\nПолучено данных: " + strconv.Itoa(pagesCount) +
+			".\nСуммарно обработано " + strconv.Itoa(nowCount) + "/" + strconv.Itoa(summaryCount) + ".\n" +
+			"Осталось обработать " + strconv.Itoa(summaryCount-nowCount) + " страниц.\nВремя в работе: " + time.Since(start_first).String())
+	}
+	sentry.CaptureMessage("[2/4] Парсер ID завершил работу за " + time.Since(start_first).String())
+}
+
+func main() {
+	for {
+		scrapIds() // How to start? | Easy! | go run parseId.go db.go Interfaces.go
 	}
 }
