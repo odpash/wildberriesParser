@@ -83,7 +83,7 @@ func scrapItem(id string, category string) int {
 		}
 		idInt, _ := strconv.Atoi(id)
 		fmt.Println(idInt, priceF, salePriceF, colors, sizes, count, category)
-		go updateItemInfoPostgreSql(idInt, float32(priceF), float32(salePriceF), colors, sizes, count, category)
+		updateItemInfoPostgreSql(idInt, float32(priceF), float32(salePriceF), colors, sizes, count, category)
 	})
 	if err != nil {
 		time.Sleep(time.Second * 3)
@@ -94,7 +94,6 @@ func scrapItem(id string, category string) int {
 
 func scrapItems() {
 	for _, v := range getDbIds() {
-
 		go scrapItem(strconv.Itoa(v.id), v.category)
 		// time.Sleep(time.Second)
 

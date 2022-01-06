@@ -25,7 +25,7 @@ type Id struct {
 }
 
 const categoryFilename = "category.json"
-const connStr = "user=postgres password=12345 dbname=wildberries sslmode=disable"
+const connStr = "user=postgres password=991155 dbname=wildberries sslmode=disable"
 
 func writeIdToPostgreSql(id int, images []string, category string) {
 	db, err := sql.Open("postgres", connStr)
@@ -33,10 +33,14 @@ func writeIdToPostgreSql(id int, images []string, category string) {
 		panic(err)
 	}
 	defer db.Close()
-	db.Exec("insert into items (id, imagelinks, count, category) values ($1, $2, 0, $3)",
+	_, e := db.Exec("insert into items (id, count, category) values ($1, 0, $2)",
+		id, category)
+	_, e2 := db.Exec("update items set imagelinks = $2, category = $3 where id = $1",
 		id, pq.Array(images), category)
-	db.Exec("update items set imagelinks = $2, category = $3 where id = $1",
-		id, pq.Array(images), category)
+	if e2 != nil {
+		fmt.Println("Errors")
+		fmt.Println(e, e2)
+	}
 }
 
 func updateItemInfoPostgreSql(id int, priceF float32, salePriceF float32, colors []string, sizes []string, count int, category string) int {

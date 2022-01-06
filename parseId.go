@@ -3,37 +3,14 @@ package main
 import (
 	"fmt"
 	"github.com/gocolly/colly"
-	"net/http"
+	"math/rand"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 )
 
-func scrapImages(id string) []string {
-	count := 0
-	var images []string
-	for {
-		count++
-		imageLink := ""
-		if len(id) == 8 {
-			imageLink = "https://images.wbstatic.net/c516x688/new/" + id[0:4] + "0000/" + id + "-" + strconv.Itoa(count) + ".jpg"
-		} else if len(id) == 7 {
-			imageLink = "https://images.wbstatic.net/c516x688/new/" + id[0:3] + "0000/" + id + "-" + strconv.Itoa(count) + ".jpg"
-		}
-
-		resp, e := http.Get(imageLink)
-		if e != nil {
-			return images
-		}
-		if resp.StatusCode == 200 {
-			images = append(images, imageLink)
-		} else {
-			return images
-		}
-	}
-}
-
-func scrapId(url string, category string, pageNum int) int {
+func scrapId(url string, category string, pageNum int, readOnly bool) int {
 	c := colly.NewCollector()
 	pagesCountInt := 0
 	c.OnHTML(".goods-count span", func(e *colly.HTMLElement) {
@@ -50,11 +27,11 @@ func scrapId(url string, category string, pageNum int) int {
 	c.OnHTML(".product-card__wrapper a", func(e *colly.HTMLElement) {
 		link := e.Attr("href")
 		id := strings.Split(link, "/")[2]
-		if id != "basket" {
-			imagesLinks := scrapImages(id)
-			//var imagesLinks []string
+		if id != "basket" && !readOnly {
+			//imagesLinks := scrapImages(id)
+			var imagesLinks []string
 			idInt, _ := strconv.Atoi(id)
-			go writeIdToPostgreSql(idInt, imagesLinks, category)
+			writeIdToPostgreSql(idInt, imagesLinks, category)
 		}
 	})
 
@@ -62,14 +39,12 @@ func scrapId(url string, category string, pageNum int) int {
 		linkPage := url + "?sort=popular&page=" + strconv.Itoa(pageNum)
 		err := c.Visit(linkPage)
 		if err != nil {
-			time.Sleep(time.Second * 5)
-			return scrapId(url, category, pageNum)
+			divizion := rand.Intn(1000)
+			fmt.Println("Request error. Sleep ", divizion, " microsecs and continue")
+			time.Sleep(time.Millisecond * time.Duration(divizion))
+			scrapId(url, category, pageNum, false)
 		}
-		if pageNum+1 > pagesCountInt {
-			return 1
-		} else {
-			return scrapId(url, category, pageNum+1)
-		}
+		return pagesCountInt
 
 		//println(addrId, newElementsCount)
 
@@ -77,11 +52,42 @@ func scrapId(url string, category string, pageNum int) int {
 
 }
 
+type arr struct {
+	pagesCount int
+}
+
 func scrapIds() {
+	var wg sync.WaitGroup
 	categories := readJson()
+	summaryCount := 0
+	start_first := time.Now()
+	var sp []arr
 	for _, v := range categories.Categories {
-		go scrapId(v.PageUrl, v.Name, 1)
+		pagesCount := scrapId(v.PageUrl, v.Name, 1, true)
+		summaryCount += pagesCount
+		sp = append(sp, arr{pagesCount: pagesCount})
+		if summaryCount > 10000 {
+			break
+		}
 	}
-	var input string
-	fmt.Scanln(&input)
+	fmt.Println("Все категории были получены за:", time.Since(start_first), "Количество:", summaryCount)
+	for x, v := range categories.Categories {
+		start := time.Now()
+		pagesCount := sp[x].pagesCount
+		for i := 1; i <= pagesCount; i++ {
+			wg.Add(1)
+			go func(v Category, i int, readOnly bool) {
+				defer wg.Done()
+				scrapId(v.PageUrl, v.Name, i, false)
+			}(v, i, false)
+			if i%50 == 0 {
+				wg.Wait()
+				fmt.Println(i, "/", pagesCount)
+			}
+		}
+		if pagesCount != 0 {
+			wg.Wait()
+		}
+		fmt.Println("Выполнено за:", time.Since(start), "Количество:", pagesCount, "Со старта прошло:", time.Since(start_first))
+	}
 }

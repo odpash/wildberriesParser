@@ -2,9 +2,13 @@ package main
 
 import (
 	"github.com/buger/jsonparser"
+	"github.com/getsentry/sentry-go"
 	"io/ioutil"
+	"log"
 	"net/http"
+	"strconv"
 	"strings"
+	"time"
 )
 
 func scrapCategoriesCycle(c []byte, newCategories Categories) Categories {
@@ -44,6 +48,15 @@ func scrapCategoriesCycle(c []byte, newCategories Categories) Categories {
 }
 
 func scrapCategories() {
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn: "https://f20597c3014e4699969af0244a66a6f8@o1108001.ingest.sentry.io/6135375",
+	})
+	if err != nil {
+		log.Fatalf("sentry.Init: %s", err)
+	}
+	defer sentry.Flush(2 * time.Second)
+
+	start := time.Now()
 	var newCategories Categories
 	url := "https://www.wildberries.ru/gettopmenuinner?lang=ru"
 	res, _ := http.Get(url)
@@ -51,4 +64,12 @@ func scrapCategories() {
 	c, _, _, _ := jsonparser.Get(body, "value", "menu")
 	newCategories = scrapCategoriesCycle(c, newCategories)
 	writeJson(newCategories)
+	sentry.CaptureMessage("[1/4] Парсер категорий выполнил задачу за " + time.Since(start).String() + " и получил " + strconv.Itoa(len(newCategories.Categories)) + " категорий.")
+}
+
+func main() {
+	for {
+		scrapCategories()
+		time.Sleep(time.Hour)
+	}
 }
