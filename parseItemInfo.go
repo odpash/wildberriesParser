@@ -1,11 +1,13 @@
 package main
 
 import (
-	"fmt"
 	"github.com/buger/jsonparser"
+	"github.com/getsentry/sentry-go"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"strconv"
+	"sync"
 	"time"
 )
 
@@ -82,7 +84,6 @@ func scrapItem(id string, category string) int {
 			salePriceF, _ = strconv.ParseFloat(salePriceS, 8)
 		}
 		idInt, _ := strconv.Atoi(id)
-		fmt.Println(idInt, priceF, salePriceF, colors, sizes, count, category)
 		updateItemInfoPostgreSql(idInt, float32(priceF), float32(salePriceF), colors, sizes, count, category)
 	})
 	if err != nil {
@@ -93,11 +94,39 @@ func scrapItem(id string, category string) int {
 }
 
 func scrapItems() {
-	for _, v := range getDbIds() {
-		go scrapItem(strconv.Itoa(v.id), v.category)
-		// time.Sleep(time.Second)
-
+	var wg sync.WaitGroup
+	err := sentry.Init(sentry.ClientOptions{
+		Dsn: "https://f20597c3014e4699969af0244a66a6f8@o1108001.ingest.sentry.io/6135375",
+	})
+	if err != nil {
+		log.Fatalf("sentry.Init: %s", err)
 	}
-	var input string
-	fmt.Scanln(&input)
+	defer sentry.Flush(2 * time.Second)
+	sentry.CaptureMessage("[4/4] Скрипт парсера товаров запущен!")
+	count := 0
+	data := GetDbIds()
+	for i, v := range data {
+		count += 1
+		wg.Add(1)
+		go func(id int, category string) {
+			defer wg.Done()
+			scrapItem(strconv.Itoa(id), category)
+		}(v.id, v.category)
+		if i%50 == 0 {
+			wg.Wait()
+			if i%50000 == 0 {
+				sentry.CaptureMessage("[4/4] Обработано " + strconv.Itoa(count) + " из " + strconv.Itoa(len(data)))
+			}
+
+		}
+	}
+	wg.Wait()
+	sentry.CaptureMessage("[4/4] Скрипт парсера товаров завершен!")
+}
+
+func mainItems() {
+	time.Sleep(500 * time.Second)
+	for {
+		scrapItems()
+	}
 }

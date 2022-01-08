@@ -1,0 +1,46 @@
+version: "3.9"
+services:
+  db:
+    image: postgres
+    command: postgres -c 'max_connections=100000'
+    environment:
+      POSTGRES_DB: "wildberries"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "991155"
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8 --lc-collate=C --lc-ctype=C'
+    volumes:
+      - ./psqsql/data:/var/lib/postgresql
+      - ./psqsql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - app-network
+    restart: always
+  parserimages:
+    build:
+      context: ./parserImages
+      dockerfile: ../Dockerfile
+    restart: always
+    networks:
+      - app-network
+    depends_on:
+      - db
+  parsercategory:
+    build:
+      context: ./parserCategory
+      dockerfile: ../Dockerfile
+    restart: always
+    networks:
+      - app-network
+    depends_on:
+      - db
+  parserid:
+    build:
+      context: ./parserId
+      dockerfile: ../Dockerfile
+    restart: always
+    networks:
+      - app-network
+    depends_on:
+      - db
+networks:
+  app-network:
+    driver: bridge

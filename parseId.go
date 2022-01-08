@@ -33,7 +33,7 @@ func scrapId(url string, category string, pageNum int, readOnly bool) int {
 			//imagesLinks := scrapImages(id)
 			var imagesLinks []string
 			idInt, _ := strconv.Atoi(id)
-			writeIdToPostgreSql(idInt, imagesLinks, category)
+			WriteIdToPostgreSql(idInt, imagesLinks, category)
 		}
 	})
 
@@ -68,7 +68,7 @@ func scrapIds() {
 	defer sentry.Flush(2 * time.Second)
 	sentry.CaptureMessage("[2/4] Скрипт парсера ID запущен!")
 	var wg sync.WaitGroup
-	categories := readJson()
+	categories := ReadJson()
 	summaryCount := 0
 	start_first := time.Now()
 	var sp []arr
@@ -102,12 +102,15 @@ func scrapIds() {
 		sentry.CaptureMessage("[2/4] Обработка группы " + strconv.Itoa(x+1) + "/" + strconv.Itoa(len(sp)) +
 			" завершена за " + time.Since(start).String() + "!\nПолучено данных: " + strconv.Itoa(pagesCount) +
 			".\nСуммарно обработано " + strconv.Itoa(nowCount) + "/" + strconv.Itoa(summaryCount) + ".\n" +
-			"Осталось обработать " + strconv.Itoa(summaryCount-nowCount) + " страниц.\nВремя в работе: " + time.Since(start_first).String())
+			"Осталось обработать " + strconv.Itoa(summaryCount-nowCount) + " страниц.\nВремя в работе: " +
+			time.Since(start_first).String() + "\nТекущее количество ID в бд: " + strconv.Itoa(len(GetDbIds())))
 	}
 	sentry.CaptureMessage("[2/4] Парсер ID завершил работу за " + time.Since(start_first).String())
 }
 
-func main() {
+func mainId() {
+	fmt.Println("ID STARTED")
+	time.Sleep(time.Second * 10)
 	for {
 		scrapIds() // How to start? | Easy! | go run parseId.go db.go Interfaces.go
 	}

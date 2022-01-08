@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/buger/jsonparser"
 	"github.com/getsentry/sentry-go"
 	"io/ioutil"
@@ -63,11 +64,12 @@ func scrapCategories() {
 	body, _ := ioutil.ReadAll(res.Body)
 	c, _, _, _ := jsonparser.Get(body, "value", "menu")
 	newCategories = scrapCategoriesCycle(c, newCategories)
-	writeJson(newCategories)
+	WriteJson(newCategories)
 	sentry.CaptureMessage("[1/4] Парсер категорий выполнил задачу за " + time.Since(start).String() + " и получил " + strconv.Itoa(len(newCategories.Categories)) + " категорий.")
 }
 
-func main() {
+func mainCategory() {
+	fmt.Println("Category Started")
 	for {
 		scrapCategories() // How to run? | go run parseCategories.go Interfaces.go db.go
 		time.Sleep(time.Hour)

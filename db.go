@@ -27,7 +27,7 @@ type Id struct {
 const categoryFilename = "category.json"
 const connStr = "user=postgres password=991155 dbname=wildberries sslmode=disable"
 
-func writeIdToPostgreSql(id int, images []string, category string) {
+func WriteIdToPostgreSql(id int, images []string, category string) {
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic(err)
@@ -81,7 +81,7 @@ func getAllByIdPostgreSql(id int) (bool, Item) {
 	return false, item
 }
 
-func writeJson(info Categories) {
+func WriteJson(info Categories) {
 	rawDataOut, err := json.MarshalIndent(&info, "", "  ")
 	if err != nil {
 		log.Fatal("JSON marshaling failed:", err)
@@ -92,7 +92,7 @@ func writeJson(info Categories) {
 	}
 }
 
-func readJson() Categories {
+func ReadJson() Categories {
 	var newCategories Categories
 	rawDataIn, err := ioutil.ReadFile(categoryFilename)
 	if err != nil {
@@ -105,7 +105,7 @@ func readJson() Categories {
 	return newCategories
 }
 
-func getDbIds() []Id {
+func GetDbIds() []Id {
 	db, err := sql.Open("postgres", connStr)
 	if err != nil {
 		panic(err)
