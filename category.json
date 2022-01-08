@@ -529,6 +529,10 @@
       "PageUrl": "https://www.wildberries.ru/catalog/detyam/tovary-dlya-malysha/pelenki-slyunyavchiki"
     },
     {
+      "Name": "Передвижение",
+      "PageUrl": "https://www.wildberries.ru/catalog/detyam/tovary-dlya-malysha/peredvizhenie"
+    },
+    {
       "Name": "Постельные принадлежности",
       "PageUrl": "https://www.wildberries.ru/catalog/detyam/tovary-dlya-malysha/postelnye-prinadlezhnosti"
     },
@@ -785,6 +789,10 @@
       "PageUrl": "https://www.wildberries.ru/catalog/dom/detskaya/predmety-interera"
     },
     {
+      "Name": "Все для праздника",
+      "PageUrl": "https://www.wildberries.ru/catalog/dlya-doma/vse-dlya-prazdnika"
+    },
+    {
       "Name": "Коллекционирование",
       "PageUrl": "https://www.wildberries.ru/catalog/kantstovary/kollektsionirovanie"
     },
@@ -795,6 +803,10 @@
     {
       "Name": "Профессиональные музыкальные инструменты",
       "PageUrl": "https://www.wildberries.ru/catalog/dom-i-dacha/professionalnye-muzykalnye-instrumenty"
+    },
+    {
+      "Name": "Творчество и рукоделие",
+      "PageUrl": "https://www.wildberries.ru/catalog/dom-i-dacha/tvorchestvo-rukodelie"
     },
     {
       "Name": "Кронштейны",
@@ -849,8 +861,16 @@
       "PageUrl": "https://www.wildberries.ru/catalog/dlya-doma/hozyaystvennye-tovary/bumaga-i-plastik"
     },
     {
+      "Name": "Ванная и туалет",
+      "PageUrl": "https://www.wildberries.ru/catalog/dlya-doma/hozyaystvennye-tovary/vannaya"
+    },
+    {
       "Name": "Глажка",
       "PageUrl": "https://www.wildberries.ru/catalog/dlya-doma/hozyaystvennye-tovary/stirka/glazhka"
+    },
+    {
+      "Name": "Кухня",
+      "PageUrl": "https://www.wildberries.ru/catalog/dlya-doma/hozyaystvennye-tovary/kuhnya"
     },
     {
       "Name": "Против насекомых и грызунов",
@@ -859,6 +879,10 @@
     {
       "Name": "Стирка",
       "PageUrl": "https://www.wildberries.ru/catalog/dlya-doma/hozyaystvennye-tovary/stirka"
+    },
+    {
+      "Name": "Товары для уборки",
+      "PageUrl": "https://www.wildberries.ru/catalog/dlya-doma/hozyaystvennye-tovary/tovary-dlya-uborki"
     },
     {
       "Name": "Уход за одеждой",
@@ -1525,6 +1549,10 @@
       "PageUrl": "https://www.wildberries.ru/catalog/elektronika/telefony-i-gadzhety/mobilnye-telefony"
     },
     {
+      "Name": "Планшеты",
+      "PageUrl": "https://www.wildberries.ru/catalog/elektronika/planshety"
+    },
+    {
       "Name": "Смартфоны",
       "PageUrl": "https://www.wildberries.ru/catalog/elektronika/smartfony-i-telefony/vse-smartfony"
     },
@@ -1743,10 +1771,6 @@
     {
       "Name": "Сюжетно-ролевые игры",
       "PageUrl": "https://www.wildberries.ru/catalog/igrushki/syuzhetno-rolevye-igry"
-    },
-    {
-      "Name": "Творчество и рукоделие",
-      "PageUrl": "https://www.wildberries.ru/catalog/igrushki/tvorchestvo-i-rukodelie"
     },
     {
       "Name": "Фигурки и роботы",
@@ -2269,6 +2293,14 @@
       "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/fitnes/inventar"
     },
     {
+      "Name": "Фитнес",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/fitnes"
+    },
+    {
+      "Name": "Тяжелая атлетика",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/tyazhelaya-atletika"
+    },
+    {
       "Name": "Тренажеры",
       "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/fitnes/trenazhery"
     },
@@ -2291,6 +2323,18 @@
     {
       "Name": "Аксессуары и инвентарь",
       "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/yoga/aksessuary-i-inventar"
+    },
+    {
+      "Name": "Рыбалка",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/ohota-i-rybolovstvo/rybalka"
+    },
+    {
+      "Name": "Зимняя Рыбалка",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/ohota-i-rybolovstvo/zimnyaya-rybalka"
+    },
+    {
+      "Name": "Охота",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/ohota-i-rybolovstvo/ohota"
     },
     {
       "Name": "Подводная охота",
@@ -2345,6 +2389,18 @@
       "PageUrl": "https://www.wildberries.ru/catalog/sport/turizm/pohody/elektronika-i-navigatsiya"
     },
     {
+      "Name": "Бег",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/beg"
+    },
+    {
+      "Name": "Ходьба",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/skandinavskaya-hodba"
+    },
+    {
+      "Name": "Баскетбол",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/basketbol"
+    },
+    {
       "Name": "Бейсбол",
       "PageUrl": "https://www.wildberries.ru/catalog/sport/sportivniy-inventar-i-aksessuary/beysbol"
     },
@@ -2363,6 +2419,18 @@
     {
       "Name": "Мини-футбол",
       "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/komandnye-vidy-sporta/mini-futbol"
+    },
+    {
+      "Name": "Футбол",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/futbol"
+    },
+    {
+      "Name": "Хоккей",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/hokkey"
+    },
+    {
+      "Name": "Клубная атрибутика",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/klubnaya-atributika"
     },
     {
       "Name": "Гидрокостюмы",
@@ -2385,12 +2453,20 @@
       "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/plavanie/aksessuary/shapochki-dlya-plavaniya"
     },
     {
-      "Name": "Фигурное катание",
-      "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/figurnoe-katanie"
+      "Name": "Беговые лыжи",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/zimnie-vidy-sporta/begovye-lyzhi"
     },
     {
-      "Name": "Хоккей",
-      "PageUrl": "https://www.wildberries.ru/catalog/sport/zimnie-vidy-sporta/hokkey"
+      "Name": "Горные лыжи",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/zimnie-vidy-sporta/gornye-lyzhi"
+    },
+    {
+      "Name": "Сноуборд",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/snoubording-snouskeyting"
+    },
+    {
+      "Name": "Фигурное катание",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/figurnoe-katanie"
     },
     {
       "Name": "Массажные аксессуары",
@@ -2495,6 +2571,14 @@
     {
       "Name": "Пули для пневматики",
       "PageUrl": "https://www.wildberries.ru/catalog/sport/straykbol-i-peyntbol/puli-dlya-pnevmatiki"
+    },
+    {
+      "Name": "Гимнастика",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/fitnes/gimnastika"
+    },
+    {
+      "Name": "Танцы",
+      "PageUrl": "https://www.wildberries.ru/catalog/sport/vidy-sporta/tantsy-gimnastika"
     },
     {
       "Name": "Ватрушки, ледянки",
@@ -2659,6 +2743,10 @@
     {
       "Name": "Искусство и культура",
       "PageUrl": "https://www.wildberries.ru/catalog/knigi/nehudozhestvennaya-literatura/iskusstvo-i-kultura"
+    },
+    {
+      "Name": "Историческая и военная литература",
+      "PageUrl": "https://www.wildberries.ru/catalog/knigi/nehudozhestvennaya-literatura/istoricheskaya-i-voennaya-literatura"
     },
     {
       "Name": "Красота, косметика и макияж",
